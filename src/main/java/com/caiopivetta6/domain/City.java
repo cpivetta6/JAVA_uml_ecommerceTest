@@ -1,50 +1,52 @@
 package com.caiopivetta6.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tb_product")
-public class Product implements Serializable{
+@Table(name = "City")
+public class City implements Serializable{
 
-
-	private static final long serialVersionUID = 1L;
 	
+	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
-	private double price;
 	
-	@JsonBackReference
-	@ManyToMany
-	@JoinTable(name = "PRODUCT_CATEGORY",
-			   joinColumns = @JoinColumn(name = "product_id"),
-			   inverseJoinColumns = @JoinColumn(name = "category_id"))
-	private List<Category> categories =  new ArrayList<>();	
+	@ManyToOne
+	@JoinColumn(name = "state_id")
+	private State state = new State();
 	
-	public Product() {
+	
+	public City() {
 		
 	}
 
-	public Product(Integer id, String name, double price) {
+	public City(Integer id, String name, State state) {
+		super();
 		this.id = id;
 		this.name = name;
-		this.price = price;
+		this.state = state;
+	}
+
+	
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
 	}
 
 	public Integer getId() {
@@ -63,21 +65,6 @@ public class Product implements Serializable{
 		this.name = name;
 	}
 
-	public double getPrice() {
-		return price;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
-	}
-
-	
-
-	public List<Category> getCategories() {
-		return categories;
-	}
-
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -91,14 +78,9 @@ public class Product implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Product other = (Product) obj;
+		City other = (City) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
-	
-	
-	
 	
 	
 	

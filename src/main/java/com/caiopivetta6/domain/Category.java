@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -16,7 +16,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "category")
+@Table(name = "tb_category")
 public class Category implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -26,7 +26,7 @@ public class Category implements Serializable {
 	private Integer id;
 	private String name;
 	
-	@JsonBackReference
+	@JsonManagedReference
 	@ManyToMany(mappedBy = "categories", cascade = CascadeType.ALL)
 	private List<Product> products = new ArrayList<>();
 
