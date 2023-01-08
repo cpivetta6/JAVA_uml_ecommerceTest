@@ -3,6 +3,8 @@ package com.caiopivetta6.domain;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,14 +28,20 @@ public class Address implements Serializable{
 	private String number;
 	private String zcode;
 	
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "client_id")
 	private Client client;
+	
 	
 	@ManyToOne
 	@JoinColumn(name = "city_id")
 	private City city;
 
+	public Address() {
+		
+	}
+	
 	public Address(Integer id, String street, String square, String number, String zcode, Client client, City city) {
 		super();
 		this.id = id;

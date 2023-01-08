@@ -90,6 +90,7 @@ public class CursomcApplication implements CommandLineRunner {
 		Address a1 = new Address(null, "Via Masini", "Piazza Bra", "47b", "323142", cl1, city1);
 		
 		cl1.getAddress().add(a1);
+		cl1.getPhone().add("3925119194");
 		
 		clientRepository.save(cl1);
 		addressRepository.save(a1);

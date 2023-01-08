@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import com.caiopivetta6.domain.enums.ClientType;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
@@ -19,7 +20,7 @@ import jakarta.persistence.Table;
 
 
 @Entity
-@Table(name = "Client")
+@Table(name = "client_tb")
 public class Client implements Serializable {
 
 	
@@ -32,6 +33,8 @@ public class Client implements Serializable {
 	private String cpfCnpj;
 	private Integer clientType;
 	
+	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "client")
 	private List<Address> address = new ArrayList<>();
 	
@@ -39,6 +42,9 @@ public class Client implements Serializable {
 	@CollectionTable(name = "phone")
 	private Set<String> phone = new HashSet<>();
 	
+	public Client() {
+		
+	}
 	
 	public Client(Integer id, String name, String cpfCnpj, ClientType clientType) {
 		super();
