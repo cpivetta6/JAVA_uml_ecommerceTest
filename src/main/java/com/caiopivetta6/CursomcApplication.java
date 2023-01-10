@@ -1,5 +1,8 @@
 package com.caiopivetta6;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,16 +11,23 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.caiopivetta6.domain.Address;
+import com.caiopivetta6.domain.BillPayment;
+import com.caiopivetta6.domain.CardPayment;
 import com.caiopivetta6.domain.Category;
 import com.caiopivetta6.domain.City;
 import com.caiopivetta6.domain.Client;
+import com.caiopivetta6.domain.Order;
+import com.caiopivetta6.domain.Payment;
 import com.caiopivetta6.domain.Product;
 import com.caiopivetta6.domain.State;
 import com.caiopivetta6.domain.enums.ClientType;
+import com.caiopivetta6.domain.enums.StatePayment;
 import com.caiopivetta6.repositories.AddressRepository;
 import com.caiopivetta6.repositories.CategoryRepository;
 import com.caiopivetta6.repositories.CityRepository;
 import com.caiopivetta6.repositories.ClientRepository;
+import com.caiopivetta6.repositories.OrderRepository;
+import com.caiopivetta6.repositories.PaymentRepository;
 import com.caiopivetta6.repositories.ProductRepository;
 import com.caiopivetta6.repositories.StateRepository;
 
@@ -42,6 +52,11 @@ public class CursomcApplication implements CommandLineRunner {
 	@Autowired
 	private ClientRepository clientRepository;
 	
+	@Autowired
+	private OrderRepository orderRepository;
+	
+	@Autowired
+	private PaymentRepository paymentRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -95,8 +110,30 @@ public class CursomcApplication implements CommandLineRunner {
 		clientRepository.save(cl1);
 		addressRepository.save(a1);
 		
+		//ORDER, STATEPAYMENT, PAYMENT
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+		
+		try {
+		Order order1 = new Order(null, sdf.parse("19/08/2023 10:10").toInstant(), cl1, a1);
+		Order order2 = new Order(null, sdf.parse("19/08/2023 10:10").toInstant(), cl1, a1);
 		
 		
+		cl1.getOrders().addAll(Arrays.asList(order1,order2));
+		
+		Payment paym1 = new CardPayment(null, StatePayment.PROCESSING_PAYMENT, order1, 6);
+		order1.setPayment(paym1);
+		
+		Payment paym2 = new BillPayment(null, StatePayment.PAID, order2, sdf.parse("19/08/2023 10:10"), null);
+		order2.setPayment(paym2);
+		
+		
+		orderRepository.saveAll(Arrays.asList(order1,order2));
+		paymentRepository.saveAll(Arrays.asList(paym1,paym2));
+		
+		}catch (ParseException e) {
+			e.getStackTrace();
+		}
 		
 	}
 	
