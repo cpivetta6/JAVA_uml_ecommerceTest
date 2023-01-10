@@ -3,6 +3,8 @@ package com.caiopivetta6.domain;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 
@@ -12,6 +14,7 @@ public class OrderItem implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	@JsonIgnore
 	@EmbeddedId
 	private OrderItemPk id = new OrderItemPk();
 	
@@ -32,9 +35,11 @@ public class OrderItem implements Serializable {
 		this.price = price;
 	}
 	
+	@JsonIgnore
 	public Order getOrder() {
 		return id.getOrder();
 	}
+	
 	
 	public Product getProduct() {
 		return id.getProduct();

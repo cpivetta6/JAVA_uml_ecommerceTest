@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import com.caiopivetta6.domain.enums.StatePayment;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -23,6 +24,7 @@ public abstract class Payment implements Serializable {
 	private Integer id;
 	private Integer state;
 	
+	@JsonBackReference
 	@OneToOne
 	@JoinColumn(name = "order_id")
 	@MapsId
