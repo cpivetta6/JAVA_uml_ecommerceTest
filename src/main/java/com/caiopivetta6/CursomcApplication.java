@@ -2,7 +2,6 @@ package com.caiopivetta6;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import com.caiopivetta6.domain.Category;
 import com.caiopivetta6.domain.City;
 import com.caiopivetta6.domain.Client;
 import com.caiopivetta6.domain.Order;
+import com.caiopivetta6.domain.OrderItem;
 import com.caiopivetta6.domain.Payment;
 import com.caiopivetta6.domain.Product;
 import com.caiopivetta6.domain.State;
@@ -26,6 +26,7 @@ import com.caiopivetta6.repositories.AddressRepository;
 import com.caiopivetta6.repositories.CategoryRepository;
 import com.caiopivetta6.repositories.CityRepository;
 import com.caiopivetta6.repositories.ClientRepository;
+import com.caiopivetta6.repositories.OrderItemRepository;
 import com.caiopivetta6.repositories.OrderRepository;
 import com.caiopivetta6.repositories.PaymentRepository;
 import com.caiopivetta6.repositories.ProductRepository;
@@ -58,12 +59,15 @@ public class CursomcApplication implements CommandLineRunner {
 	@Autowired
 	private PaymentRepository paymentRepository;
 	
-	public static void main(String[] args) {
+	@Autowired
+	private OrderItemRepository orderItemRepository;
+	
+	public static void main(String[] args)  {
 		SpringApplication.run(CursomcApplication.class, args);
 	}
 
 	@Override
-	public void run (String... args) throws Exception {
+	public void run (String... args) throws Exception, ParseException {
 	
 		//PRODUCT AND CATEGORY
 		Category cat1 = new Category(null, "Informatic");
@@ -114,7 +118,7 @@ public class CursomcApplication implements CommandLineRunner {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
 		
-		try {
+		
 		Order order1 = new Order(null, sdf.parse("19/08/2023 10:10").toInstant(), cl1, a1);
 		Order order2 = new Order(null, sdf.parse("19/08/2023 10:10").toInstant(), cl1, a1);
 		
@@ -131,9 +135,21 @@ public class CursomcApplication implements CommandLineRunner {
 		orderRepository.saveAll(Arrays.asList(order1,order2));
 		paymentRepository.saveAll(Arrays.asList(paym1,paym2));
 		
-		}catch (ParseException e) {
-			e.getStackTrace();
-		}
+		
+		//ORDERITEM 
+		
+		OrderItem oi1 = new OrderItem(order1, p1, 0.00, 1, 2000.0);
+		OrderItem oi2 = new OrderItem(order1, p3, 0.00, 2, 80.0);
+		OrderItem oi3 = new OrderItem(order2, p2, 100.0, 1, 800.0);
+		
+		order1.getItems().addAll(Arrays.asList(oi1, oi2));
+		order2.getItems().addAll(Arrays.asList(oi3));
+		
+		p1.getItems().addAll(Arrays.asList(oi1));
+		p2.getItems().addAll(Arrays.asList(oi3));
+		p3.getItems().addAll(Arrays.asList(oi2));
+		
+		orderItemRepository.saveAll(Arrays.asList(oi1, oi2,oi3));
 		
 	}
 	

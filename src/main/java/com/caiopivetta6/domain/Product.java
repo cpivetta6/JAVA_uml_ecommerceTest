@@ -2,8 +2,10 @@ package com.caiopivetta6.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -14,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -37,6 +40,10 @@ public class Product implements Serializable{
 			   inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private List<Category> categories =  new ArrayList<>();	
 	
+	@OneToMany(mappedBy = "id.product")
+	private Set<OrderItem> items = new HashSet<>();
+	
+	
 	public Product() {
 		
 	}
@@ -45,6 +52,18 @@ public class Product implements Serializable{
 		this.id = id;
 		this.name = name;
 		this.price = price;
+	}
+	
+	public List<Order> getOrders (){
+		
+		List<Order> list = new ArrayList<>();
+		
+		for(OrderItem x : items) {
+			list.add(x.getOrder());
+		}
+		
+		return list;
+		
 	}
 
 	public Integer getId() {
@@ -76,6 +95,16 @@ public class Product implements Serializable{
 	public List<Category> getCategories() {
 		return categories;
 	}
+	
+
+	public Set<OrderItem> getItems() {
+		return items;
+	}
+
+	public void setItems(Set<OrderItem> items) {
+		this.items = items;
+	}
+	
 
 
 	@Override
@@ -94,7 +123,7 @@ public class Product implements Serializable{
 		Product other = (Product) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+
 	
 	
 	
